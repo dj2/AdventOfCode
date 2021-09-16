@@ -5,7 +5,8 @@ fn main() {
     }
 
     let filename = &args[1];
-    let data = std::fs::read_to_string(filename).expect(&format!("Unable to read {}", filename));
+    let data =
+        std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
 
     let nice: Vec<&str> = data.lines().filter(|l| check(l)).collect();
     println!("{}", nice.len());
@@ -14,12 +15,8 @@ fn main() {
 fn check(input: &str) -> bool {
     let vowel_count = input
         .chars()
-        .filter(|c| match c {
-            'a' | 'e' | 'i' | 'o' | 'u' => true,
-            _ => false,
-        })
-        .collect::<Vec<char>>()
-        .len();
+        .filter(|c| matches!(c, 'a' | 'e' | 'i' | 'o' | 'u'))
+        .count();
 
     let bad_combo = input.contains("ab")
         || input.contains("cd")

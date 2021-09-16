@@ -71,16 +71,15 @@ fn parse(input: &str) -> Vec<Command> {
     let mut ret: Vec<Command> = Vec::new();
 
     for l in input.lines() {
-        match parse_line(l) {
-            Some(cmd) => ret.push(cmd),
-            None => {}
+        if let Some(cmd) = parse_line(l) {
+            ret.push(cmd);
         }
     }
     ret
 }
 
 fn make_pos(input: &str) -> Pos {
-    let parts: Vec<&str> = input.split(",").collect();
+    let parts: Vec<&str> = input.split(',').collect();
     Pos {
         x: parts[0].parse::<usize>().unwrap(),
         y: parts[1].parse::<usize>().unwrap(),
@@ -123,7 +122,8 @@ fn main() {
     }
     let filename = &args[1];
 
-    let input = std::fs::read_to_string(filename).expect(&format!("Unable to read {}", filename));
+    let input =
+        std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
     let data = parse(&input);
 
     let mut g = Grid::new(1000, 1000);

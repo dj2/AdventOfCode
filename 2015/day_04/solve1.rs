@@ -11,13 +11,10 @@ fn calc(input: &str) -> i32 {
         let digest = md5::compute(val.as_bytes());
         let res = format!("{:x}", digest);
 
-        match res[0..5].parse::<i32>() {
-            Ok(v) => {
-                if v == 0 {
-                    break;
-                }
+        if let Ok(v) = res[0..5].parse::<i32>() {
+            if v == 0 {
+                break;
             }
-            _ => {}
         }
         cur += 1;
     }

@@ -6,8 +6,8 @@ fn main() {
     }
     let filename = &args[1];
 
-    let data = std::fs::read_to_string(filename)
-        .expect(&format!("Unable to read {}", filename).to_string());
+    let data =
+        std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
 
     let ret = process(&data);
     match ret {

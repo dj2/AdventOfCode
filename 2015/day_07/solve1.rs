@@ -34,7 +34,7 @@ impl Circuit {
         }
     }
 
-    fn process(&mut self, cmds: &Vec<Command>) {
+    fn process(&mut self, cmds: &[Command]) {
         for c in cmds {
             self.wires.insert(c.dest.clone(), c.input.clone());
         }
@@ -96,10 +96,7 @@ fn parse(input: &str) -> Vec<Command> {
         let input = parse_input(&parts[0].to_string());
         match input {
             Some(v) => {
-                res.push(Command {
-                    dest: dest,
-                    input: v,
-                });
+                res.push(Command { dest, input: v });
             }
             None => panic!("Unable to handle {}", l),
         }
@@ -116,22 +113,20 @@ fn cap_to_val(cap: Option<regex::Match>) -> u16 {
 
 fn parse_signal(input: &str) -> Signal {
     let value_re = Regex::new(r"^\s*(\d+)\s*$").unwrap();
-    let value_match = |line: &str| -> Option<Signal> {
-        match value_re.captures(line) {
-            Some(cap) => Some(Signal::Value(cap_to_val(cap.get(1)))),
-            None => None,
-        }
+    let value_match = || -> Option<Signal> {
+        value_re
+            .captures(input)
+            .map(|cap| Signal::Value(cap_to_val(cap.get(1))))
     };
 
     let wire_re = Regex::new(r"^\s*(\w+)\s*$").unwrap();
-    let wire_match = |line: &str| -> Option<Signal> {
-        match wire_re.captures(line) {
-            Some(cap) => Some(Signal::Wire(cap_to_str(cap.get(1)))),
-            None => None,
-        }
+    let wire_match = || -> Option<Signal> {
+        wire_re
+            .captures(input)
+            .map(|cap| Signal::Wire(cap_to_str(cap.get(1))))
     };
 
-    let sig = value_match(input).or(wire_match(input));
+    let sig = value_match().or_else(wire_match);
     match sig {
         Some(s) => s,
         None => panic!("Invalid input {}", input),
@@ -143,54 +138,49 @@ fn parse_input(input: &str) -> Option<Input> {
 
     let and_re = Regex::new(r"^\s*(\w+)\s+AND\s+(\w+)\s*$").unwrap();
     let and_match = || -> Option<Input> {
-        match and_re.captures(input) {
-            Some(cap) => Some(Input::And(
+        and_re.captures(input).map(|cap| {
+            Input::And(
                 parse_signal(&cap_to_str(cap.get(1))),
                 parse_signal(&cap_to_str(cap.get(2))),
-            )),
-            None => None,
-        }
+            )
+        })
     };
 
     let or_re = Regex::new(r"^\s*(\w+)\s+OR\s+(\w+)\s*$").unwrap();
     let or_match = || -> Option<Input> {
-        match or_re.captures(input) {
-            Some(cap) => Some(Input::Or(
+        or_re.captures(input).map(|cap| {
+            Input::Or(
                 parse_signal(&cap_to_str(cap.get(1))),
                 parse_signal(&cap_to_str(cap.get(2))),
-            )),
-            None => None,
-        }
+            )
+        })
     };
 
     let not_re = Regex::new(r"^\s*NOT\s+(\w+)\s*$").unwrap();
     let not_match = || -> Option<Input> {
-        match not_re.captures(input) {
-            Some(cap) => Some(Input::Not(parse_signal(&cap_to_str(cap.get(1))))),
-            None => None,
-        }
+        not_re
+            .captures(input)
+            .map(|cap| Input::Not(parse_signal(&cap_to_str(cap.get(1)))))
     };
 
     let lshift_re = Regex::new(r"^\s*(\w+)\s+LSHIFT\s+(\d+)\s*$").unwrap();
     let lshift_match = || -> Option<Input> {
-        match lshift_re.captures(input) {
-            Some(cap) => Some(Input::LShift(
+        lshift_re.captures(input).map(|cap| {
+            Input::LShift(
                 parse_signal(&cap_to_str(cap.get(1))),
                 cap_to_val(cap.get(2)),
-            )),
-            None => None,
-        }
+            )
+        })
     };
 
     let rshift_re = Regex::new(r"^\s*(\w+)\s+RSHIFT\s+(\d+)\s*$").unwrap();
     let rshift_match = || -> Option<Input> {
-        match rshift_re.captures(input) {
-            Some(cap) => Some(Input::RShift(
+        rshift_re.captures(input).map(|cap| {
+            Input::RShift(
                 parse_signal(&cap_to_str(cap.get(1))),
                 cap_to_val(cap.get(2)),
-            )),
-            None => None,
-        }
+            )
+        })
     };
 
     and_match()
@@ -208,7 +198,8 @@ fn main() {
     }
     let filename = &args[1];
 
-    let data = std::fs::read_to_string(filename).expect(&format!("Unable to parse {}", filename));
+    let data =
+        std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
     let cmds = parse(&data);
 
     let mut c = Circuit::new();

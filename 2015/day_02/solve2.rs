@@ -6,7 +6,7 @@ fn main() {
 
     let filename = &args[1];
     let data =
-        std::fs::read_to_string(filename).expect(format!("Unable to read: {}", filename).as_str());
+        std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
 
     let mut sum = 0;
     for p in data.lines() {
@@ -23,17 +23,17 @@ fn calc_size(input: &str) -> i32 {
         panic!("Invalid input {}", input);
     }
 
-    let l: i32 = parts[0].parse().unwrap();
-    let w: i32 = parts[1].parse().unwrap();
-    let h: i32 = parts[2].parse().unwrap();
+    let length: i32 = parts[0].parse().unwrap();
+    let width: i32 = parts[1].parse().unwrap();
+    let height: i32 = parts[2].parse().unwrap();
 
-    let mut vec = vec![l, w, h];
-    vec.sort();
+    let mut vec = vec![length, width, height];
+    vec.sort_unstable();
 
-    let a = vec[0];
-    let b = vec[1];
+    let dim1 = vec[0];
+    let dim2 = vec[1];
 
-    a + a + b + b + (l * w * h)
+    dim1 + dim1 + dim2 + dim2 + (length * width * height)
 }
 
 #[cfg(test)]
