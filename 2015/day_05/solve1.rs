@@ -1,4 +1,3 @@
-
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
@@ -6,24 +5,26 @@ fn main() {
     }
 
     let filename = &args[1];
-    let data = std::fs::read_to_string(filename)
-        .expect(&format!("Unable to read {}", filename));
+    let data = std::fs::read_to_string(filename).expect(&format!("Unable to read {}", filename));
 
     let nice: Vec<&str> = data.lines().filter(|l| check(l)).collect();
     println!("{}", nice.len());
 }
 
 fn check(input: &str) -> bool {
-    let vowel_count = input.chars().filter(|c|
-            match c {
-                'a'|'e'|'i'|'o'|'u' => true,
-                _ => false,
-            }
-        ).collect::<Vec<char>>().len();
+    let vowel_count = input
+        .chars()
+        .filter(|c| match c {
+            'a' | 'e' | 'i' | 'o' | 'u' => true,
+            _ => false,
+        })
+        .collect::<Vec<char>>()
+        .len();
 
-    let bad_combo = input.contains("ab") ||
-            input.contains("cd") || input.contains("pq") ||
-            input.contains("xy");
+    let bad_combo = input.contains("ab")
+        || input.contains("cd")
+        || input.contains("pq")
+        || input.contains("xy");
 
     let mut has_double_letter = false;
     for (idx, c) in input.chars().enumerate() {

@@ -29,8 +29,8 @@ struct Circuit {
 }
 impl Circuit {
     fn new() -> Self {
-        Circuit{
-            wires: HashMap::new()
+        Circuit {
+            wires: HashMap::new(),
         }
     }
 
@@ -41,7 +41,8 @@ impl Circuit {
     }
 
     fn overwrite(&mut self, wire: &str, val: u16) {
-        self.wires.insert(wire.to_string(), Input::Value(Signal::Value(val)));
+        self.wires
+            .insert(wire.to_string(), Input::Value(Signal::Value(val)));
     }
 
     fn calc_val(&mut self, wire: &str) -> u16 {
@@ -50,41 +51,40 @@ impl Circuit {
     }
 
     fn resolve_input(&mut self, input: &Input) -> u16 {
-        let mut resolve_signal = |s: &Signal| {
-            match s {
-                Signal::Wire(w) => {
-                    let val = self.resolve_input(&self.wires.get(w).unwrap().clone());
-                    self.wires.insert(w.to_string(), Input::Value(Signal::Value(val)));
-                    val
-                },
-                Signal::Value(v) => *v,
+        let mut resolve_signal = |s: &Signal| match s {
+            Signal::Wire(w) => {
+                let val = self.resolve_input(&self.wires.get(w).unwrap().clone());
+                self.wires
+                    .insert(w.to_string(), Input::Value(Signal::Value(val)));
+                val
             }
+            Signal::Value(v) => *v,
         };
 
         match input {
-           Input::Value(v) => resolve_signal(v),
-           Input::And(a, b) => {
-               let a = resolve_signal(a);
-               let b = resolve_signal(b);
-               a & b
-           },
-           Input::Or(a, b) => {
-               let a = resolve_signal(a);
-               let b = resolve_signal(b);
-               a | b
-           },
-           Input::Not(a) => {
-               let a = resolve_signal(a);
-               !a
-           },
-           Input::LShift(a, b) => {
-               let a = resolve_signal(a);
-               a << b
-           },
-           Input::RShift(a, b) => {
-               let a = resolve_signal(a);
-               a >> b
-           },
+            Input::Value(v) => resolve_signal(v),
+            Input::And(a, b) => {
+                let a = resolve_signal(a);
+                let b = resolve_signal(b);
+                a & b
+            }
+            Input::Or(a, b) => {
+                let a = resolve_signal(a);
+                let b = resolve_signal(b);
+                a | b
+            }
+            Input::Not(a) => {
+                let a = resolve_signal(a);
+                !a
+            }
+            Input::LShift(a, b) => {
+                let a = resolve_signal(a);
+                a << b
+            }
+            Input::RShift(a, b) => {
+                let a = resolve_signal(a);
+                a >> b
+            }
         }
     }
 }
@@ -101,11 +101,11 @@ fn parse(input: &str) -> Vec<Command> {
         let input = parse_input(&parts[0].to_string());
         match input {
             Some(v) => {
-                res.push(Command{
+                res.push(Command {
                     dest: dest,
                     input: v,
                 });
-            },
+            }
             None => panic!("Unable to handle {}", l),
         }
     }
@@ -136,8 +136,7 @@ fn parse_signal(input: &str) -> Signal {
         }
     };
 
-    let sig = value_match(input)
-        .or(wire_match(input));
+    let sig = value_match(input).or(wire_match(input));
     match sig {
         Some(s) => s,
         None => panic!("Invalid input {}", input),
@@ -145,16 +144,15 @@ fn parse_signal(input: &str) -> Signal {
 }
 
 fn parse_input(input: &str) -> Option<Input> {
-    let signal_match = || -> Option<Input> {
-        Some(Input::Value(parse_signal(input)))
-    };
+    let signal_match = || -> Option<Input> { Some(Input::Value(parse_signal(input))) };
 
     let and_re = Regex::new(r"^\s*(\w+)\s+AND\s+(\w+)\s*$").unwrap();
     let and_match = || -> Option<Input> {
-         match and_re.captures(input) {
+        match and_re.captures(input) {
             Some(cap) => Some(Input::And(
-                    parse_signal(&cap_to_str(cap.get(1))),
-                    parse_signal(&cap_to_str(cap.get(2))))),
+                parse_signal(&cap_to_str(cap.get(1))),
+                parse_signal(&cap_to_str(cap.get(2))),
+            )),
             None => None,
         }
     };
@@ -163,8 +161,9 @@ fn parse_input(input: &str) -> Option<Input> {
     let or_match = || -> Option<Input> {
         match or_re.captures(input) {
             Some(cap) => Some(Input::Or(
-                    parse_signal(&cap_to_str(cap.get(1))),
-                    parse_signal(&cap_to_str(cap.get(2))))),
+                parse_signal(&cap_to_str(cap.get(1))),
+                parse_signal(&cap_to_str(cap.get(2))),
+            )),
             None => None,
         }
     };
@@ -181,7 +180,9 @@ fn parse_input(input: &str) -> Option<Input> {
     let lshift_match = || -> Option<Input> {
         match lshift_re.captures(input) {
             Some(cap) => Some(Input::LShift(
-                    parse_signal(&cap_to_str(cap.get(1))), cap_to_val(cap.get(2)))),
+                parse_signal(&cap_to_str(cap.get(1))),
+                cap_to_val(cap.get(2)),
+            )),
             None => None,
         }
     };
@@ -190,7 +191,9 @@ fn parse_input(input: &str) -> Option<Input> {
     let rshift_match = || -> Option<Input> {
         match rshift_re.captures(input) {
             Some(cap) => Some(Input::RShift(
-                    parse_signal(&cap_to_str(cap.get(1))), cap_to_val(cap.get(2)))),
+                parse_signal(&cap_to_str(cap.get(1))),
+                cap_to_val(cap.get(2)),
+            )),
             None => None,
         }
     };
@@ -210,8 +213,7 @@ fn main() {
     }
     let filename = &args[1];
 
-    let data = std::fs::read_to_string(filename)
-            .expect(&format!("Unable to parse {}", filename));
+    let data = std::fs::read_to_string(filename).expect(&format!("Unable to parse {}", filename));
     let cmds = parse(&data);
 
     let mut c = Circuit::new();
@@ -219,4 +221,3 @@ fn main() {
     c.overwrite("b", 956);
     println!("{}", c.calc_val("a"));
 }
-

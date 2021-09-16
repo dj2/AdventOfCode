@@ -16,8 +16,8 @@ fn calc(input: &str) -> i32 {
                 if v == 0 {
                     break;
                 }
-            },
-            _ => {},
+            }
+            _ => {}
         }
         cur += 1;
     }

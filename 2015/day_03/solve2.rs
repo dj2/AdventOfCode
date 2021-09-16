@@ -7,8 +7,8 @@ fn main() {
     }
     let filename = &args[1];
 
-    let data = std::fs::read_to_string(filename)
-            .expect(format!("Unable to read {}", filename).as_str());
+    let data =
+        std::fs::read_to_string(filename).expect(format!("Unable to read {}", filename).as_str());
     println!("{}", calc(&data))
 }
 
@@ -17,17 +17,10 @@ fn calc(input: &str) -> i32 {
         x: i32,
         y: i32,
     }
-    let mut pos = vec![Data{
-        x: 0,
-        y: 0,
-    },
-    Data{
-        x: 0,
-        y: 0,
-    }];
+    let mut pos = vec![Data { x: 0, y: 0 }, Data { x: 0, y: 0 }];
     let mut idx = 0;
 
-    let mut seen : HashSet<(i32, i32)> = HashSet::new();
+    let mut seen: HashSet<(i32, i32)> = HashSet::new();
     seen.insert((0, 0));
 
     for c in input.chars() {

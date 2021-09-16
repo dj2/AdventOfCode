@@ -5,8 +5,8 @@ fn main() {
     }
 
     let filename = &args[1];
-    let data = std::fs::read_to_string(filename)
-            .expect(format!("Unable to read: {}", filename).as_str());
+    let data =
+        std::fs::read_to_string(filename).expect(format!("Unable to read: {}", filename).as_str());
 
     let mut sum = 0;
     for p in data.lines() {

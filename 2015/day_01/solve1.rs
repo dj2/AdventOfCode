@@ -1,4 +1,3 @@
-
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {
@@ -8,7 +7,7 @@ fn main() {
     let filename = &args[1];
 
     let data = std::fs::read_to_string(filename)
-            .expect(&format!("Unable to read {}", filename).to_string());
+        .expect(&format!("Unable to read {}", filename).to_string());
 
     println!("{}", process(&data));
 }
