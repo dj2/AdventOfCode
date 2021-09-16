@@ -1,2 +1,6 @@
 [workspace]
 members = ["20*"]
+
+[profile.dev]
+opt-level = 3
+
