@@ -4,6 +4,7 @@ version = "0.0.1"
 
 [dependencies]
 md5 = "0.7.0"
+regex = "1.5"
 
 [[bin]]
 name = "2015-01-1"
@@ -53,5 +54,11 @@ path = "day_06/solve1.rs"
 name = "2015-06-2"
 path = "day_06/solve2.rs"
 
+[[bin]]
+name = "2015-07-1"
+path = "day_07/solve1.rs"
 
+[[bin]]
+name = "2015-07-2"
+path = "day_07/solve2.rs"
 
