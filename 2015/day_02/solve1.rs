@@ -1,3 +1,6 @@
+#![warn(clippy::all)]
+#![warn(rust_2018_idioms)]
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     if args.len() < 2 {

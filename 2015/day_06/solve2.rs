@@ -1,3 +1,6 @@
+#![warn(clippy::all)]
+#![warn(rust_2018_idioms)]
+
 #[derive(Debug, Copy, Clone, PartialEq)]
 struct Pos {
     x: usize,

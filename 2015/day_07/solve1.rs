@@ -1,3 +1,6 @@
+#![warn(clippy::all)]
+#![warn(rust_2018_idioms)]
+
 extern crate regex;
 
 use regex::Regex;
@@ -104,10 +107,10 @@ fn parse(input: &str) -> Vec<Command> {
     res
 }
 
-fn cap_to_str(cap: Option<regex::Match>) -> String {
+fn cap_to_str(cap: Option<regex::Match<'_>>) -> String {
     cap.unwrap().as_str().to_string()
 }
-fn cap_to_val(cap: Option<regex::Match>) -> u16 {
+fn cap_to_val(cap: Option<regex::Match<'_>>) -> u16 {
     cap.unwrap().as_str().parse().unwrap()
 }
 
