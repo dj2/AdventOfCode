@@ -13,8 +13,8 @@ fn main() {
     let data =
         std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
 
-    let nice: Vec<&str> = data.lines().filter(|l| check(l)).collect();
-    println!("{}", nice.len());
+    let nice = data.lines().filter(|l| check(l)).count();
+    println!("{}", nice);
 }
 
 fn check(input: &str) -> bool {
