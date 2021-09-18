@@ -79,3 +79,12 @@ path = "day_09/solve1.rs"
 name = "2015-09-2"
 path = "day_09/solve2.rs"
 
+[[bin]]
+name = "2015-10-1"
+path = "day_10/solve1.rs"
+
+[[bin]]
+name = "2015-10-2"
+path = "day_10/solve2.rs"
+
+
