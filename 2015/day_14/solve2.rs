@@ -79,7 +79,9 @@ fn process(input: &str, seconds: usize) -> usize {
         data.sort_by(|a, b| b.dist.cmp(&a.dist));
         let dist = data[0].dist;
 
-        data.iter_mut().filter(|c| c.dist == dist).for_each(|x| x.inc_score() );
+        data.iter_mut()
+            .filter(|c| c.dist == dist)
+            .for_each(|x| x.inc_score());
         if tick > seconds {
             break;
         }
@@ -99,7 +101,6 @@ fn main() {
     println!("{}", process(&data, 2503));
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -111,4 +112,3 @@ Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.";
         assert_eq!(689, process(input, 1000));
     }
 }
-

@@ -36,7 +36,11 @@ fn process_line(input: &str, seconds: usize) -> usize {
 }
 
 fn process(input: &str, seconds: usize) -> usize {
-    input.lines().map(|l| process_line(l, seconds)).max().unwrap()
+    input
+        .lines()
+        .map(|l| process_line(l, seconds))
+        .max()
+        .unwrap()
 }
 
 fn main() {
@@ -51,7 +55,6 @@ fn main() {
     println!("{}", process(&data, 2503));
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -65,6 +68,12 @@ Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.";
 
     #[test]
     fn test_process_line() {
-        assert_eq!(1056, process("Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.", 1000));
+        assert_eq!(
+            1056,
+            process(
+                "Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.",
+                1000
+            )
+        );
     }
 }
