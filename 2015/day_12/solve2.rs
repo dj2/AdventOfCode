@@ -64,7 +64,6 @@ fn main() {
     println!("{}", process(&data));
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -89,4 +88,3 @@ mod test {
         assert_eq!(6, process(r#"[1,"red",5]"#));
     }
 }
-

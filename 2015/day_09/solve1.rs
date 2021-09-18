@@ -1,12 +1,12 @@
 #![warn(clippy::all)]
 #![warn(rust_2018_idioms)]
 
-extern crate regex;
 extern crate itertools;
+extern crate regex;
 
-use std::collections::HashMap;
-use regex::Regex;
 use itertools::Itertools;
+use regex::Regex;
+use std::collections::HashMap;
 
 fn cap_to_str(cap: Option<regex::Match<'_>>) -> String {
     cap.unwrap().as_str().to_string()
@@ -70,7 +70,6 @@ fn main() {
         std::fs::read_to_string(filename).unwrap_or_else(|_| panic!("Unable to read {}", filename));
     println!("{}", process(&data));
 }
-
 
 #[cfg(test)]
 mod test {

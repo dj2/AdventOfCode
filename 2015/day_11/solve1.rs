@@ -41,7 +41,10 @@ fn next_password(input: &str) -> String {
     let mut data: Vec<char> = input.chars().collect();
 
     // Short circuit as soon as we find a bad char, replace it and 'a' out the remainder
-    if let Some(idx) = data.iter().position(|c| *c == 'i' || *c == 'o' || *c == 'l') {
+    if let Some(idx) = data
+        .iter()
+        .position(|c| *c == 'i' || *c == 'o' || *c == 'l')
+    {
         data[idx] = char::from_u32((data[idx] as u32) + 1).unwrap();
         for item in data.iter_mut().skip(idx + 1) {
             *item = 'a';

@@ -30,7 +30,6 @@ fn main() {
     println!("{}", process(&data));
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;

@@ -38,7 +38,6 @@ fn main() {
     println!("{}", process("1113222113", 40));
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
@@ -73,4 +72,3 @@ mod test {
         assert_eq!("312211", process_line("111221"));
     }
 }
-
