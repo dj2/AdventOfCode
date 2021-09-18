@@ -43,8 +43,8 @@ fn next_password(input: &str) -> String {
     // Short circuit as soon as we find a bad char, replace it and 'a' out the remainder
     if let Some(idx) = data.iter().position(|c| *c == 'i' || *c == 'o' || *c == 'l') {
         data[idx] = char::from_u32((data[idx] as u32) + 1).unwrap();
-        for idx in idx + 1..data.len() {
-            data[idx] = 'a';
+        for item in data.iter_mut().skip(idx + 1) {
+            *item = 'a';
         }
     }
 
@@ -68,7 +68,7 @@ fn next_password(input: &str) -> String {
 }
 
 fn process(input: &str) -> String {
-    let mut res = next_password(&input);
+    let mut res = next_password(input);
     while !is_valid(&res) {
         res = next_password(&res);
         if res.chars().all(|c| c == 'a') {

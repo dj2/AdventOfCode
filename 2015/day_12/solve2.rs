@@ -24,9 +24,9 @@ fn strip(input: &str) -> String {
 
 fn strip_json(json: &mut serde_json::Value) -> Option<&serde_json::Value> {
     if let serde_json::Value::Array(data) = json {
-        for i in 0..data.len() {
-            if None == strip_json(&mut data[i]) {
-                data[i] = serde_json::Value::Null;
+        for mut item in data.iter_mut() {
+            if None == strip_json(&mut item) {
+                *item = serde_json::Value::Null;
             }
         }
     } else if let serde_json::Value::Object(data) = json {
@@ -35,10 +35,8 @@ fn strip_json(json: &mut serde_json::Value) -> Option<&serde_json::Value> {
                 if content == "red" {
                     return None;
                 }
-            } else {
-                if None == strip_json(&mut value) {
-                    *value = serde_json::Value::Null;
-                }
+            } else if None == strip_json(&mut value) {
+                *value = serde_json::Value::Null;
             }
         }
     }
